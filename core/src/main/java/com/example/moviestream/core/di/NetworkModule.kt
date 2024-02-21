@@ -1,6 +1,7 @@
 package com.example.moviestream.core.di
 
 import com.example.moviestream.core.BuildConfig
+import com.example.moviestream.core.data.remote.service.MoviesService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,5 +55,11 @@ object NetworkModule {
             .client(okHttpClient)
             .addConverterFactory(gsonConverterFactory)
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMovieService(retrofit: Retrofit) : MoviesService {
+        return retrofit.create(MoviesService::class.java)
     }
 }
