@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  Primary  -->
+    <color name="primary_light">#EDF5FF</color>
+    <color name="primary_main">#045FC4</color>
+    <color name="primary_dark">#003C80</color>
+    <!--  Secondary  -->
+    <color name="secondary_light">#FFF3F5</color>
+    <color name="secondary_main">#ED1A39</color>
+    <color name="secondary_dark">#C0021E</color>
+    <!--  Error  -->
+    <color name="error_light">#FEF3F2</color>
+    <color name="error_main">#F04438</color>
+    <color name="error_dark">#B42318</color>
+    <!--  Warning  -->
+    <color name="warning_light">#FFFAEB</color>
+    <color name="warning_main">#F79009</color>
+    <color name="warning_dark">#B54708</color>
+    <!--  Success  -->
+    <color name="success_light">#ECFDF3</color>
+    <color name="success_main">#12B76A</color>
+    <color name="success_dark">#027A48</color>
+    <!--  Neutral  -->
+    <color name="neutral_light">#747474</color>
+    <color name="neutral_main">#3D3D3D</color>
+    <color name="neutral_dark">#212028</color>
+    <!--  Gray  -->
+    <color name="gray_light">#EBEBEB</color>
+    <color name="gray_main">#E0E0E0</color>
+    <color name="gray_dark">#8D8D8D</color>
+    <!--  White -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="white_dark">#FAFAFA</color>
+    <color name="white_darker">#F5F5F5</color>
+
+    <!--  Unknown  -->
+    <color name="black">#FF000000</color>
+    <color name="grey_90">#475667</color>
+    <color name="date_true">#2c2e31</color>
+    <color name="date_false">#c6c9cf</color>
+    <color name="dot">#1de9b6</color>
+</resources>
