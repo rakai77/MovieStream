@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.moviestream.core.BaseResult
+import com.example.moviestream.core.domain.model.MovieDetail
 import com.example.moviestream.core.domain.model.MovieGenre
 import com.example.moviestream.core.domain.model.MovieItem
 import com.example.moviestream.core.domain.repository.MovieRepository
@@ -27,5 +28,9 @@ class MovieInteractor @Inject constructor(
             ),
             pagingSourceFactory = { movieRepository.listMovieByGenre(genreId) }
         ).flow
+    }
+
+    override suspend fun getMovieDetail(movieId: String): Flow<BaseResult<MovieDetail>> {
+        return movieRepository.getMovieDetail(movieId)
     }
 }

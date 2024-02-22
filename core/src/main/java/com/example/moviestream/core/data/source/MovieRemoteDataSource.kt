@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.example.moviestream.core.BaseResult
 import com.example.moviestream.core.data.remote.service.MoviesService
 import com.example.moviestream.core.data.toDomain
+import com.example.moviestream.core.domain.model.MovieDetail
 import com.example.moviestream.core.domain.model.MovieGenre
 import com.example.moviestream.core.domain.model.MovieItem
 import com.example.moviestream.core.domain.repository.MovieRepository
@@ -71,5 +72,30 @@ class MovieRemoteDataSource @Inject constructor(
                 }
             }
         }
+    }
+
+    override suspend fun getMovieDetail(movieId: String): Flow<BaseResult<MovieDetail>> {
+        return flow {
+            try {
+                val response = moviesService.movieDetail(movieId)
+                if (response.isSuccessful) {
+                    val body = response.body()!!
+                    emit(BaseResult.Success(body.toDomain()))
+                }
+            } catch (t: Throwable) {
+                when (t) {
+                    is HttpException -> {
+                        emit(BaseResult.Error(t.code(), t.message() ?: "something went wrong"))
+                    }
+                    is UnknownHostException -> {
+                        emit(BaseResult.Error(null, t.message ?: "check your internet connection"))
+                    }
+                    is SocketTimeoutException -> {
+                        emit(BaseResult.Error(null, t.message ?: "Timeout"))
+                    }
+                    else -> emit(BaseResult.Error(null, t.message ?: "something went wrong"))
+                }
+            }
+        }.flowOn(Dispatchers.IO)
     }
 }
