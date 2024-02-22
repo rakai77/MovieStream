@@ -1,5 +1,6 @@
 package com.example.moviestream.presentation.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviestream.core.domain.model.MovieGenre
+import com.example.moviestream.core.domain.model.MovieGenreItem
 import com.example.moviestream.databinding.FragmentHomeBinding
 import com.example.moviestream.presentation.home.adapter.MovieGenreAdapter
 import com.example.moviestream.presentation.home.adapter.MoviePagingAdapter
@@ -35,6 +37,7 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var movieGenreAdapter: MovieGenreAdapter
     private lateinit var listMovieAdapter: MoviePagingAdapter
+    private var movieGenreItem: MovieGenreItem? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,9 +60,17 @@ class HomeFragment : Fragment() {
             .launchIn(lifecycleScope)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun initializeView() {
         binding.apply {
-            movieGenreAdapter = MovieGenreAdapter()
+            movieGenreAdapter = MovieGenreAdapter(
+                onItemClicked = {
+                    getMovieListByGenre(it.id.toString())
+                    movieGenreAdapter.setSelectedItem(it)
+                    movieGenreAdapter.notifyDataSetChanged()
+                },
+                context = requireContext()
+            )
             rvMovieGenre.adapter = movieGenreAdapter
             rvMovieGenre.layoutManager = LinearLayoutManager(
                 requireContext(),
@@ -91,18 +102,26 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun initializeData(genre: MovieGenre) {
         if (genre.genres.isNotEmpty()) {
             binding.rvMovieGenre.visible()
+            movieGenreItem = genre.genres[0]
+            movieGenreAdapter.setSelectedItem(movieGenreItem!!)
             movieGenreAdapter.submitList(genre.genres)
+            movieGenreAdapter.notifyDataSetChanged()
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.getMovieByGenre(genre.genres[0].id.toString()).collectLatest {
-                    listMovieAdapter.submitData(it)
-                }
-            }
+            getMovieListByGenre(movieGenreItem!!.id.toString())
         } else {
             binding.rvMovieGenre.gone()
+        }
+    }
+
+    private fun getMovieListByGenre(genre: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getMovieByGenre(genre).collectLatest {
+                listMovieAdapter.submitData(it)
+            }
         }
     }
 

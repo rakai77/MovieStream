@@ -40,4 +40,6 @@
     <color name="date_true">#2c2e31</color>
     <color name="date_false">#c6c9cf</color>
     <color name="dot">#1de9b6</color>
+
+    <color name="purple">#21005D</color>
 </resources>

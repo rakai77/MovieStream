@@ -16,7 +16,7 @@ interface MoviesService {
     @GET("discover/movie")
     suspend fun listMovieByGenre(
         @Query("page") page: Int,
-        @Query("with_genre") genreId: String,
+        @Query("with_genres") genreId: String,
         @Query("api_key") query: String = "b917efbd6df2adf02c62cf3b78882e78",
     ) : Response<MovieByGenreResponse>
 }
