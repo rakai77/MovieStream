@@ -11,4 +11,10 @@ interface MoviesService {
     suspend fun listMovieGenre(
         @Query("api_key") query: String = "b917efbd6df2adf02c62cf3b78882e78"
     ) : Response<MovieGenreResponse>
+
+    @GET("discover/movie")
+    suspend fun listMovieByGenre(
+        @Query("api_key") query: String = "b917efbd6df2adf02c62cf3b78882e78",
+        @Query("with_genre") genreId: String
+    ) : Response<MovieGenreResponse>
 }
