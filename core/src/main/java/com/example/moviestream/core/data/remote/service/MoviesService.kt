@@ -1,5 +1,6 @@
 package com.example.moviestream.core.data.remote.service
 
+import com.example.moviestream.core.data.remote.MovieByGenreResponse
 import com.example.moviestream.core.data.remote.MovieGenreResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -14,7 +15,8 @@ interface MoviesService {
 
     @GET("discover/movie")
     suspend fun listMovieByGenre(
+        @Query("page") page: Int,
+        @Query("with_genre") genreId: String,
         @Query("api_key") query: String = "b917efbd6df2adf02c62cf3b78882e78",
-        @Query("with_genre") genreId: String
-    ) : Response<MovieGenreResponse>
+    ) : Response<MovieByGenreResponse>
 }

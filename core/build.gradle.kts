@@ -53,6 +53,7 @@ dependencies {
     kapt(libs.hilt.android.compiler)
 
     implementation(libs.bundles.network)
+    implementation(libs.paging.runtime)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
