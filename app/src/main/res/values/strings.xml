@@ -4,7 +4,7 @@
     <!-- Strings used for fragments for navigation -->
 
     <string name="home_screen_title">Movie Stream</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="movie_detail_label">Movie Detail</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
@@ -44,4 +44,6 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="image_backdrop_detail">Image Backdrop Detail</string>
+    <string name="tvDesc">Description</string>
 </resources>

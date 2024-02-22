@@ -13,13 +13,13 @@
 
         <action
             android:id="@+id/action_HomeFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/MovieDetailFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.moviestream.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/MovieDetailFragment"
+        android:name="com.example.moviestream.presentation.detail.MovieDetailFragment"
+        android:label="@string/movie_detail_label"
+        tools:layout="@layout/fragment_movie_detail">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
