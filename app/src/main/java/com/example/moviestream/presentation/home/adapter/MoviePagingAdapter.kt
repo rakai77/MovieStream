@@ -10,7 +10,9 @@ import com.example.moviestream.R
 import com.example.moviestream.core.domain.model.MovieItem
 import com.example.moviestream.databinding.ListMovieBinding
 
-class MoviePagingAdapter : PagingDataAdapter<MovieItem, MoviePagingAdapter.MoviePageViewHolder>(DIFF_CALLBACK) {
+class MoviePagingAdapter(
+    private val onItemClicked: (MovieItem) -> Unit
+) : PagingDataAdapter<MovieItem, MoviePagingAdapter.MoviePageViewHolder>(DIFF_CALLBACK) {
     inner class MoviePageViewHolder(private val binding: ListMovieBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: MovieItem) {
             with(binding) {
@@ -18,6 +20,9 @@ class MoviePagingAdapter : PagingDataAdapter<MovieItem, MoviePagingAdapter.Movie
                 imgMoviePoster.load("https://image.tmdb.org/t/p/w500/" + item.posterPath){
                     crossfade(800)
                     placeholder(R.drawable.ic_image_placeholder_filled)
+                }
+                itemView.setOnClickListener {
+                    onItemClicked.invoke(item)
                 }
             }
         }

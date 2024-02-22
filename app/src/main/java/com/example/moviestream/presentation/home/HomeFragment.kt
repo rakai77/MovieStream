@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviestream.core.domain.model.MovieGenre
@@ -78,7 +79,12 @@ class HomeFragment : Fragment() {
                 false
             )
 
-            listMovieAdapter = MoviePagingAdapter()
+            listMovieAdapter = MoviePagingAdapter(
+                onItemClicked = {
+                    val action = HomeFragmentDirections.actionHomeFragmentToMovieDetailFragment(it.id.toString())
+                    findNavController().navigate(action)
+                }
+            )
             rvMovieList.adapter = listMovieAdapter.withLoadStateFooter(
                 footer =  LoadingStateAdapter { listMovieAdapter.retry() }
             )
