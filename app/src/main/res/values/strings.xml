@@ -49,4 +49,10 @@
     <string name="failed_to_load_data">Failed to load</string>
     <string name="btn_retry">Retry</string>
     <string name="image_poster">Image Poster</string>
+    <string name="strip">-</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="see_review">See Review -></string>
+    <string name="review">Review</string>
+    <string name="close">Close</string>
 </resources>

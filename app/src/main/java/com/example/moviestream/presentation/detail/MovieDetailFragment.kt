@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.moviestream.R
 import com.example.moviestream.core.domain.model.MovieDetail
@@ -44,7 +45,13 @@ class MovieDetailFragment : Fragment() {
         observer()
         movieId = arguments?.getString("movieId").toString()
         Log.d("TAG", "movieId: $movieId")
+
         viewModel.getMovieDetail(movieId)
+
+        binding.tvSeeReview.setOnClickListener {
+            val action = MovieDetailFragmentDirections.actionMovieDetailFragmentToMovieReviewFragment(movieId)
+            findNavController().navigate(action)
+        }
     }
 
     private fun observer() {

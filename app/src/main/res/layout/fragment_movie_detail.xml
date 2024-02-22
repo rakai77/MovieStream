@@ -56,6 +56,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvRatingGenre" />
 
+    <TextView
+        android:id="@+id/tvSeeReview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/see_review"
+        android:textColor="@color/purple"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDesc" />
+
     <ProgressBar
         android:id="@+id/pbDetailScreen"
         android:layout_width="wrap_content"
