@@ -46,4 +46,7 @@
     </string>
     <string name="image_backdrop_detail">Image Backdrop Detail</string>
     <string name="tvDesc">Description</string>
+    <string name="failed_to_load_data">Failed to load</string>
+    <string name="btn_retry">Retry</string>
+    <string name="image_poster">Image Poster</string>
 </resources>
