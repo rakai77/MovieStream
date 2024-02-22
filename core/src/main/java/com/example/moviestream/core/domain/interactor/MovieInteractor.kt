@@ -7,6 +7,7 @@ import com.example.moviestream.core.BaseResult
 import com.example.moviestream.core.domain.model.MovieDetail
 import com.example.moviestream.core.domain.model.MovieGenre
 import com.example.moviestream.core.domain.model.MovieItem
+import com.example.moviestream.core.domain.model.MovieReviewItem
 import com.example.moviestream.core.domain.repository.MovieRepository
 import com.example.moviestream.core.domain.usecase.MovieUseCase
 import kotlinx.coroutines.flow.Flow
@@ -32,5 +33,16 @@ class MovieInteractor @Inject constructor(
 
     override suspend fun getMovieDetail(movieId: String): Flow<BaseResult<MovieDetail>> {
         return movieRepository.getMovieDetail(movieId)
+    }
+
+    override fun getListMovieReview(movieId: String): Flow<PagingData<MovieReviewItem>> {
+        return Pager(
+            config = PagingConfig(
+                enablePlaceholders = false,
+                pageSize = 20,
+                initialLoadSize = 20
+            ),
+            pagingSourceFactory = { movieRepository.listMovieReview(movieId) }
+        ).flow
     }
 }

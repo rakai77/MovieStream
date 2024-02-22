@@ -8,6 +8,7 @@ import com.example.moviestream.core.data.toDomain
 import com.example.moviestream.core.domain.model.MovieDetail
 import com.example.moviestream.core.domain.model.MovieGenre
 import com.example.moviestream.core.domain.model.MovieItem
+import com.example.moviestream.core.domain.model.MovieReviewItem
 import com.example.moviestream.core.domain.repository.MovieRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -97,5 +98,32 @@ class MovieRemoteDataSource @Inject constructor(
                 }
             }
         }.flowOn(Dispatchers.IO)
+    }
+
+    override fun listMovieReview(movieId: String): PagingSource<Int, MovieReviewItem> {
+        return object : PagingSource<Int, MovieReviewItem>() {
+            override fun getRefreshKey(state: PagingState<Int, MovieReviewItem>): Int? {
+                return state.anchorPosition
+            }
+
+            override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieReviewItem> {
+                return try {
+                    val movieReviewPage = params.key ?: 1
+
+                    val movieReviewResponse = moviesService.listMovieReview(movieId, movieReviewPage)
+                    val movieReview = movieReviewResponse.body()?.toDomain()?.results ?: emptyList()
+
+                    LoadResult.Page(
+                        data = movieReview,
+                        prevKey = null,
+                        nextKey = if (movieReview.isEmpty()) null else movieReviewPage + 1
+                    )
+                } catch (e: IOException) {
+                    LoadResult.Error(e)
+                } catch (e: HttpException) {
+                    LoadResult.Error(e)
+                }
+            }
+        }
     }
 }
