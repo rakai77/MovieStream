@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviestream.databinding.FragmentMovieReviewBinding
 import com.example.moviestream.presentation.detail.adapter.MovieReviewAdapter
 import com.example.moviestream.utils.LoadingStateAdapter
+import com.example.moviestream.utils.gone
+import com.example.moviestream.utils.visible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -66,13 +68,22 @@ class MovieReviewFragment : BottomSheetDialogFragment() {
             rvMovieReview.adapter = movieReviewAdapter.withLoadStateFooter(
                 footer =  LoadingStateAdapter { movieReviewAdapter.retry() }
             )
-            rvMovieReview.setHasFixedSize(true)
+//            rvMovieReview.setHasFixedSize(true)
             btnErrorLoad.setOnClickListener { movieReviewAdapter.retry() }
             rvMovieReview.layoutManager = LinearLayoutManager(requireContext())
             movieReviewAdapter.addLoadStateListener { load ->
                 pbMovieList.isVisible = load.source.refresh is LoadState.Loading
                 tvErrorLoad.isVisible = load.source.refresh is LoadState.Error
                 btnErrorLoad.isVisible = load.refresh is LoadState.Error
+
+                if (load.source.refresh is LoadState.NotLoading &&
+                    load.append.endOfPaginationReached &&
+                    movieReviewAdapter.itemCount < 1) {
+
+                    emptyData.root.visible()
+                } else {
+                    emptyData.root.gone()
+                }
             }
         }
     }

@@ -55,4 +55,6 @@
     <string name="see_review">See Review -></string>
     <string name="review">Review</string>
     <string name="close">Close</string>
+    <string name="image_empty">Image Empty</string>
+    <string name="data_is_empty">No data</string>
 </resources>

@@ -88,4 +88,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        android:id="@+id/emptyData"
+        layout="@layout/empty_data"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewDividerActionBar"
+        tools:listitem="@layout/list_movie_review"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

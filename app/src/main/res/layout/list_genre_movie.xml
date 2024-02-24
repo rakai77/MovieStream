@@ -13,6 +13,7 @@
     android:orientation="vertical"
     app:cardElevation="0dp"
     app:strokeColor="@drawable/bg_stroke_color"
+    app:cardBackgroundColor="@color/white"
     app:strokeWidth="1dp"
     card_view:cardCornerRadius="8dp"
     card_view:checkedIcon="@null">
