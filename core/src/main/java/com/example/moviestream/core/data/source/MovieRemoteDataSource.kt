@@ -34,15 +34,15 @@ class MovieRemoteDataSource @Inject constructor(
             } catch (t: Throwable) {
                 when (t) {
                     is HttpException -> {
-                        emit(BaseResult.Error(t.code(), t.message() ?: "something went wrong"))
+                        emit(BaseResult.Error(t.code(), t.message() ?: "Ups, something went wrong!"))
                     }
                     is UnknownHostException -> {
-                        emit(BaseResult.Error(null, t.message ?: "check your internet connection"))
+                        emit(BaseResult.Error(null, t.message ?: "Check your internet connection"))
                     }
                     is SocketTimeoutException -> {
                         emit(BaseResult.Error(null, t.message ?: "Timeout"))
                     }
-                    else -> emit(BaseResult.Error(null, t.message ?: "something went wrong"))
+                    else -> emit(BaseResult.Error(null, t.message ?: "Something went wrong"))
                 }
             }
         }.flowOn(Dispatchers.IO)
@@ -86,15 +86,15 @@ class MovieRemoteDataSource @Inject constructor(
             } catch (t: Throwable) {
                 when (t) {
                     is HttpException -> {
-                        emit(BaseResult.Error(t.code(), t.message() ?: "something went wrong"))
+                        emit(BaseResult.Error(t.code(), t.message() ?: "Ups, something went wrong!"))
                     }
                     is UnknownHostException -> {
-                        emit(BaseResult.Error(null, t.message ?: "check your internet connection"))
+                        emit(BaseResult.Error(null, t.message ?: "Check your internet connection"))
                     }
                     is SocketTimeoutException -> {
                         emit(BaseResult.Error(null, t.message ?: "Timeout"))
                     }
-                    else -> emit(BaseResult.Error(null, t.message ?: "something went wrong"))
+                    else -> emit(BaseResult.Error(null, t.message ?: "Something went wrong"))
                 }
             }
         }.flowOn(Dispatchers.IO)
