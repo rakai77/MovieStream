@@ -3,7 +3,9 @@ package com.example.moviestream.core.repository
 import app.cash.turbine.test
 import com.example.moviestream.core.BaseResult
 import com.example.moviestream.core.data.listGenre
+import com.example.moviestream.core.data.movieDetail
 import com.example.moviestream.core.data.remote.GenresItemResult
+import com.example.moviestream.core.data.remote.MovieDetailResponse
 import com.example.moviestream.core.data.remote.MovieGenreResponse
 import com.example.moviestream.core.data.remote.service.MoviesService
 import com.example.moviestream.core.data.source.MovieRemoteDataSource
@@ -230,6 +232,43 @@ class MovieRepositoryTest {
             sut = sut,
             expectedResult = "Something went wrong"
         )
+    }
+
+    @Test
+    fun `test get movie detail on Success 200`() = runBlocking {
+        val response = Response.success(MovieDetailResponse(
+            id = 1,
+            title = "Iron Man",
+            genres = listOf(),
+            overview = "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum",
+            posterPath = "www.tmdb.com",
+            releaseDate = "25 Jan 2008",
+            voteAverage = 8.7,
+            status = "release"
+        ))
+
+        coEvery {
+            service.movieDetail("1")
+        } returns response
+
+        sut.getMovieDetail("1").test {
+            when(val result = awaitItem()) {
+                is BaseResult.Success -> {
+                    assertEquals(
+                        result.data,
+                        movieDetail
+                    )
+                }
+                else -> Unit
+            }
+            awaitComplete()
+        }
+
+        coVerify(exactly = 1) {
+            service.movieDetail("1")
+        }
+
+        confirmVerified(service)
     }
 
     @After
