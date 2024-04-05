@@ -2,6 +2,7 @@ package com.example.moviestream.core.data
 
 import com.example.moviestream.core.data.remote.MovieDetailResponse
 import com.example.moviestream.core.domain.model.MovieDetail
+import com.example.moviestream.core.domain.model.MovieGenre
 import com.example.moviestream.core.domain.model.MovieGenreItem
 
 val listGenre = listOf(
@@ -25,6 +26,10 @@ val listGenre = listOf(
         name = "Thriller",
         id = 5
     )
+)
+
+val movieGenre = MovieGenre(
+    genres = listGenre
 )
 
 val movieDetail = MovieDetail(
