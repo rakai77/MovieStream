@@ -1,14 +1,24 @@
 package com.example.moviestream.core.repository
 
+import androidx.paging.PagingSource
 import app.cash.turbine.test
 import com.example.moviestream.core.BaseResult
 import com.example.moviestream.core.data.listGenre
 import com.example.moviestream.core.data.movieDetail
+import com.example.moviestream.core.data.movieItem
+import com.example.moviestream.core.data.movieReviewItem
+import com.example.moviestream.core.data.remote.AuthorDetails
 import com.example.moviestream.core.data.remote.GenresItemResult
+import com.example.moviestream.core.data.remote.MovieByGenreResponse
 import com.example.moviestream.core.data.remote.MovieDetailResponse
 import com.example.moviestream.core.data.remote.MovieGenreResponse
+import com.example.moviestream.core.data.remote.MovieResultsItem
+import com.example.moviestream.core.data.remote.MovieReviewResponse
+import com.example.moviestream.core.data.remote.MovieReviewResult
 import com.example.moviestream.core.data.remote.service.MoviesService
 import com.example.moviestream.core.data.source.MovieRemoteDataSource
+import com.example.moviestream.core.domain.model.MovieItem
+import com.example.moviestream.core.domain.model.MovieReviewItem
 import com.example.moviestream.core.domain.repository.MovieRepository
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -161,6 +171,133 @@ class MovieRepositoryTest {
     }
 
     @Test
+    fun `test get MovieByGenre on Failure Timeout`() = runBlocking {
+        val expectedResult = PagingSource.LoadResult.Error<Int, MovieItem>(SocketTimeoutException())
+
+        coEvery {
+            service.listMovieByGenre(1,"1")
+        } throws expectedResult.throwable
+
+        val result = sut.listMovieByGenre("1").load(
+            PagingSource.LoadParams.Refresh(
+                key = 1,
+                loadSize = 1,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertEquals(expectedResult, result)
+
+        coVerify(exactly = 1) {
+            service.listMovieByGenre(1, "1")
+        }
+
+        confirmVerified(service)
+    }
+
+    @Test
+    fun `test get MovieByGenre on Failure Connectivity`() = runBlocking {
+        val expectedResult = PagingSource.LoadResult.Error<Int, MovieItem>(IOException())
+
+        coEvery {
+            service.listMovieByGenre(1,"1")
+        } throws expectedResult.throwable
+
+        val result = sut.listMovieByGenre("1").load(
+            PagingSource.LoadParams.Refresh(
+                key = 1,
+                loadSize = 1,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertEquals(expectedResult, result)
+
+        coVerify(exactly = 1) {
+            service.listMovieByGenre(1, "1")
+        }
+
+        confirmVerified(service)
+    }
+
+    @Test
+    fun `test get MovieByGenre on Failure HttpException`() = runBlocking {
+
+        val exception = HttpException(Response.error<MoviesService>(404, "".toResponseBody()))
+        val expectedResult = PagingSource.LoadResult.Error<Int, MovieItem>(exception)
+
+        coEvery { service.listMovieByGenre(1,"1") } throws expectedResult.throwable
+
+        val result = sut.listMovieByGenre("1").load(
+            PagingSource.LoadParams.Refresh(
+                key = 1,
+                loadSize = 1,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertEquals(expectedResult, result)
+
+        coVerify {
+            service.listMovieByGenre(1, "1")
+        }
+
+        confirmVerified(service)
+    }
+
+    @Test
+    fun `test get MovieByGenre on Load Successfully`() = runBlocking {
+        val response = MovieByGenreResponse(
+            page = 1,
+            totalResults = 1,
+            results = listOf(
+                MovieResultsItem(
+                    id = 1,
+                    title = "Lorem ipsum",
+                    posterPath = "%%%%%%"
+                ),
+                MovieResultsItem(
+                    id = 2,
+                    title = "Lorem ipsum",
+                    posterPath = "%%%%%%"
+                ),
+                MovieResultsItem(
+                    id = 3,
+                    title = "Lorem ipsum",
+                    posterPath = "%%%%%%"
+                )
+            ),
+            totalPages = 3
+        )
+
+        val expectedResult = PagingSource.LoadResult.Page(
+                data = movieItem,
+                prevKey = null,
+                nextKey = 2
+        )
+
+        coEvery {
+            service.listMovieByGenre(1, "1")
+        } returns Response.success(response)
+
+        val result = sut.listMovieByGenre("1").load(
+            PagingSource.LoadParams.Append(
+                key = 1,
+                loadSize = 1,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertEquals(expectedResult, result)
+
+        coVerify(exactly = 1) {
+            service.listMovieByGenre(1, "1")
+        }
+
+        confirmVerified(service)
+    }
+
+    @Test
     fun `test get movie detail on Failure 400`() {
         expectDetailMovie(
             withStatusCode = 400,
@@ -266,6 +403,154 @@ class MovieRepositoryTest {
 
         coVerify(exactly = 1) {
             service.movieDetail("1")
+        }
+
+        confirmVerified(service)
+    }
+
+    @Test
+    fun `test get MovieReview on Failure Timeout`() = runBlocking {
+        val expectedResult = PagingSource.LoadResult.Error<Int, MovieReviewItem>(SocketTimeoutException())
+
+        coEvery {
+            service.listMovieReview("1",1)
+        } throws expectedResult.throwable
+
+        val result = sut.listMovieReview("1").load(
+            PagingSource.LoadParams.Refresh(
+                key = 1,
+                loadSize = 1,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertEquals(expectedResult, result)
+
+        coVerify(exactly = 1) {
+            service.listMovieReview("1", 1)
+        }
+
+        confirmVerified(service)
+    }
+
+    @Test
+    fun `test get MovieReview on Failure Connectivity`() = runBlocking {
+        val expectedResult = PagingSource.LoadResult.Error<Int, MovieReviewItem>(IOException())
+
+        coEvery {
+            service.listMovieReview("1",1)
+        } throws expectedResult.throwable
+
+        val result = sut.listMovieReview("1").load(
+            PagingSource.LoadParams.Refresh(
+                key = 1,
+                loadSize = 1,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertEquals(expectedResult, result)
+
+        coVerify(exactly = 1) {
+            service.listMovieReview("1", 1)
+        }
+
+        confirmVerified(service)
+    }
+
+    @Test
+    fun `test get MovieReview on Failure HttpException`() = runBlocking {
+
+        val exception = HttpException(Response.error<MoviesService>(404, "".toResponseBody()))
+        val expectedResult = PagingSource.LoadResult.Error<Int, MovieReviewItem>(exception)
+
+        coEvery { service.listMovieReview("1",1) } throws expectedResult.throwable
+
+        val result = sut.listMovieReview("1").load(
+            PagingSource.LoadParams.Refresh(
+                key = 1,
+                loadSize = 1,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertEquals(expectedResult, result)
+
+        coVerify {
+            service.listMovieReview("1", 1)
+        }
+
+        confirmVerified(service)
+    }
+
+    @Test
+    fun `test get MovieReview on Load Successfully`() = runBlocking {
+        val response = MovieReviewResponse(
+            page = 1,
+            totalResults = 1,
+            results = listOf(
+                MovieReviewResult(
+                    authorDetails = AuthorDetails(
+                        avatarPath = "Lorem ipsum",
+                        name = "Lorem ipsum",
+                        rating = 0.0,
+                        username = "lorem ipsum"
+                    ),
+                    author = "Lorem ipsum",
+                    createdAt = "Lorem ipsum",
+                    id = "12",
+                    content = "Lorem ipsum"
+                ),
+                MovieReviewResult(
+                    authorDetails = AuthorDetails(
+                        avatarPath = "Lorem ipsum",
+                        name = "Lorem ipsum",
+                        rating = 0.0,
+                        username = "lorem ipsum"
+                    ),
+                    author = "Lorem ipsum",
+                    createdAt = "Lorem ipsum",
+                    id = "12",
+                    content = "Lorem ipsum"
+                ),
+                MovieReviewResult(
+                    authorDetails = AuthorDetails(
+                        avatarPath = "Lorem ipsum",
+                        name = "Lorem ipsum",
+                        rating = 0.0,
+                        username = "lorem ipsum"
+                    ),
+                    author = "Lorem ipsum",
+                    createdAt = "Lorem ipsum",
+                    id = "12",
+                    content = "Lorem ipsum"
+                )
+            ),
+            totalPages = 3
+        )
+
+        val expectedResult = PagingSource.LoadResult.Page(
+            data = movieReviewItem,
+            prevKey = null,
+            nextKey = 2
+        )
+
+        coEvery {
+            service.listMovieReview("1", 1)
+        } returns Response.success(response)
+
+        val result = sut.listMovieReview("1").load(
+            PagingSource.LoadParams.Append(
+                key = 1,
+                loadSize = 1,
+                placeholdersEnabled = false
+            )
+        )
+
+        assertEquals(expectedResult, result)
+
+        coVerify(exactly = 1) {
+            service.listMovieReview("1", 1)
         }
 
         confirmVerified(service)
