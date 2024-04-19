@@ -1,4 +1,4 @@
-package com.example.moviestream.core.repository
+package com.example.moviestream.core.data.repository
 
 import androidx.paging.PagingSource
 import app.cash.turbine.test

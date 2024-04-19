@@ -11,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.cache
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -29,7 +28,7 @@ class HomeViewModel @Inject constructor(
         getMovieGenre()
     }
 
-    private fun getMovieGenre() {
+    fun getMovieGenre() {
         viewModelScope.launch {
             movieUseCase.getListGenreMovie()
                 .onStart {
