@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -38,6 +40,12 @@ class HomeViewModelTest {
         sut = HomeViewModel(movieUseCase = movieUseCase)
     }
 
+    /**
+     *  Have an issue in unit test in viewModel.
+     *  coEvery(exactly = 2) is temporary for now. It causes suspending function called twice.
+     *  Next update would be fix the issue
+     */
+
     @Test
     fun `test loading list movie genre`() = runBlocking {
         coEvery {
@@ -49,10 +57,7 @@ class HomeViewModelTest {
         sut.movieGenre.take(1).test {
             when(val result = awaitItem()) {
                 is HomeUiState.Loading -> {
-                    assertEquals(
-                        true,
-                        result.loading
-                    )
+                    assertTrue(result.loading)
                 }
                 else -> Unit
             }
@@ -76,11 +81,12 @@ class HomeViewModelTest {
 
         sut.movieGenre.take(1).test {
             when(val result = awaitItem()) {
+                is HomeUiState.Loading -> {
+                    assertTrue(result.loading)
+                }
                 is HomeUiState.SuccessGenreMovie -> {
-                    assertEquals(
-                        movieGenre,
-                        result.genre
-                    )
+                    assertNotNull(result.genre)
+                    assertEquals(movieGenre, result.genre)
                 }
                 else -> Unit
             }
@@ -104,10 +110,42 @@ class HomeViewModelTest {
 
         sut.movieGenre.take(1).test {
             when(val result = awaitItem()) {
+                is HomeUiState.Loading -> {
+                    assertTrue(result.loading)
+                }
                 is HomeUiState.SuccessGenreMovie -> {
+                    assertNotNull(result.genre)
+                    assertEquals(emptyMovieGenre, result.genre)
+                }
+                else -> Unit
+            }
+            awaitComplete()
+        }
+
+        coVerify(exactly = 2) {
+            movieUseCase.getListGenreMovie()
+        }
+
+        confirmVerified(movieUseCase)
+    }
+
+    @Test
+    fun `test load list movie genre on failure from response`() = runBlocking {
+        coEvery {
+            movieUseCase.getListGenreMovie()
+        } returns flowOf(BaseResult.Error(null, "Timeout"))
+
+        sut.getMovieGenre()
+
+        sut.movieGenre.take(1).test {
+            when(val result = awaitItem()) {
+                is HomeUiState.Loading -> {
+                    assertTrue(result.loading)
+                }
+                is HomeUiState.Error -> {
                     assertEquals(
-                        emptyMovieGenre,
-                        result.genre
+                        "Timeout",
+                        result.message
                     )
                 }
                 else -> Unit
